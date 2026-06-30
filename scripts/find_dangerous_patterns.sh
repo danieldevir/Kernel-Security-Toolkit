@@ -1,6 +1,5 @@
 #!/bin/bash
-# find_dangerous_patterns.sh – Search for dangerous kernel patterns
-# Usage: ./find_dangerous_patterns.sh <kernel_source_directory>
+# find_dangerous_patterns.sh – Search for dangerous kernel patterns (Improved)
 
 echo "🔍 Searching for dangerous kernel patterns..."
 
@@ -23,17 +22,20 @@ echo "📁 Searching in: $KERNEL_DIR"
 echo "📌 Pattern 1: copy_from_user without size check"
 grep -r --include="*.c" -A 5 -B 2 "copy_from_user" "$KERNEL_DIR" | grep -v "if (.*size" > copy_from_user_results.txt
 
-# Pattern 2: kmalloc without NULL check
+# Pattern 2: kmalloc without NULL check (exclude generated files)
 echo "📌 Pattern 2: kmalloc without NULL check"
-grep -r --include="*.c" -A 3 -B 1 "kmalloc(" "$KERNEL_DIR" | grep -v "if (.*NULL" > kmalloc_results.txt
+grep -r --include="*.c" -A 3 -B 1 "kmalloc(" "$KERNEL_DIR" | grep -v -E "(flex|lex|parse|yacc)" | grep -v "if (.*NULL" > kmalloc_results.txt
 
-# Pattern 3: mutex_lock without matching unlock
+# Pattern 3: mutex_lock without matching unlock (exclude generated files)
 echo "📌 Pattern 3: mutex_lock without matching unlock"
-grep -r --include="*.c" -A 3 -B 1 "mutex_lock(" "$KERNEL_DIR" | grep -v "mutex_unlock" > mutex_results.txt
+grep -r --include="*.c" -A 3 -B 1 "mutex_lock(" "$KERNEL_DIR" | grep -v -E "(flex|lex|parse|yacc)" | grep -v "mutex_unlock" > mutex_results.txt
 
-# Pattern 4: Uninitialized variables
-echo "📌 Pattern 4: Uninitialized variables"
-grep -r --include="*.c" -A 2 -B 1 "int.*;" "$KERNEL_DIR" | grep -v "=" > uninitialized_results.txt
+# Pattern 4: Uninitialized variables (improved and filtered)
+echo "📌 Pattern 4: Potential uninitialized variables"
+grep -r --include="*.c" -n -A 2 -B 1 -E "(int|char|long|unsigned) [a-zA-Z_][a-zA-Z0-9_]*\s*[;,]" "$KERNEL_DIR" | \
+grep -v -E "(flex|lex|parse|yacc|\.tmp_|\.o\.)" | \
+grep -v " = " | \
+grep -v "//" > uninitialized_results.txt
 
 echo "✅ Analysis complete! Check the following files:"
 echo "  - copy_from_user_results.txt"
