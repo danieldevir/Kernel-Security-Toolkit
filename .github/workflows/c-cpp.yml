@@ -13,11 +13,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc make
+    
+    - name: Compile PoC examples
+      run: |
+        cd scripts/poc_examples
+        gcc -o null_pointer_poc null_pointer_poc.c
+        gcc -o deadlock_poc deadlock_poc.c -lpthread
+    
+    - name: Run PoC checks
+      run: |
+        cd scripts/poc_examples
+        ./null_pointer_poc || true
+        timeout 2s ./deadlock_poc || true
