@@ -83,6 +83,3 @@ If you find a new pattern or have a better script, feel free to:
 
 **Daniel Baradaran**  
 🔗 [GitHub](https://github.com/danieldevir) · 📧 daniel.ir.dev@gmail.com
-*Stay curious. Sآخر
-
-دانیال جان، این بار متن کاملاً تمیز است و همه‌ی بخش
