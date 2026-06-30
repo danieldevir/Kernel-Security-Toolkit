@@ -22,7 +22,7 @@ All scripts are designed to run on **minimal systems** (even on a 15-year-old la
 | File/Directory | Description |
 |----------------|-------------|
 | `scripts/find_dangerous_patterns.sh` | Searches for dangerous kernel functions (`copy_from_user`, `mutex_lock`, `kmalloc`, etc.) |
-| `scripts/cve_advisor_pro.sh` | **New!** Advanced CVE intelligence tool – fetches, analyzes, and provides mitigation advice |
+| `scripts/cve_advisor.sh` | **New!** Advanced CVE intelligence tool – fetches, analyzes, and provides mitigation advice |
 | `scripts/coccinelle_checks/kmalloc_check.cocci` | Coccinelle script to find missing NULL checks after `kmalloc` |
 | `scripts/coccinelle_checks/mutex_check.cocci` | Coccinelle script to find missing `mutex_unlock` in error paths |
 | `scripts/poc_examples/null_pointer_poc.c` | Sample PoC for a NULL pointer dereference |
